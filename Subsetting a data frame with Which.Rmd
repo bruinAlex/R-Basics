@@ -1,0 +1,55 @@
+---
+title: "Subsetting with a data frame"
+author: "Alexander Lau"
+date: "August 22, 2015"
+output: html_document
+---
+
+Here's some mice data showing the body weights of 24 mice fed either a control or a high fat diet.
+
+```{r, echo=FALSE}
+dat <- read.csv("femaleMiceWeights.csv")
+dat
+```
+
+How would you find the mean of the body weights of mice fed the control (chow) diet?
+You could use split with lapply or sapply, or use tapply, but let's try to get just the
+control diet answer.
+
+```{r}
+mean(dat$Bodyweight[which(dat$Diet == "chow")])
+```
+
+So let's break this down:
+
+The which() function works on vectors, not data frames. So we need to take a vector out of the data frame
+dat to use it, and in this case a vector would be any of the columns. We pass to which() our conditional
+which is to look at the vector dat$Diet and only return the indices of elements that equal to "chow," our
+control diet. 
+
+By itself, which() returns this:
+
+```{r}
+which(dat$Diet == "chow")
+```
+
+We get back a vector containing the index numbers of elements that got fed the chow. We actually wanted to look at body weight. Remember that dat$Bodyweight is also a vector, and now we've just been given the indices of elements in that 
+vector that meat our diet conditional. Also remember that subsetting a vector takes the form:
+
+```
+vector_name[element_indices]
+```
+
+We now have both pieces of information to subset the body weight of mice fed the chow diet:
+
+```{r}
+dat$Bodyweight[which(dat$Diet == "chow")]
+```
+
+We're almost there. Our original goal was to take the mean of this subset, which we can calculate using the mean() function:
+
+```{r}
+mean(dat$Bodyweight[which(dat$Diet == "chow")])
+```
+
+There we have it: the average body weight of mice eating the chow diet is ~23.8 grams.
